@@ -1,0 +1,15 @@
+name = "company-search-worker"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Local dev — set GEMINI_API_KEY in .dev.vars (gitignored)
+# Production — run: wrangler secret put GEMINI_API_KEY
+
+[vars]
+# ALLOWED_ORIGIN is a non-secret env var; override per environment below.
+# For local dev this defaults to http://localhost:5173 in the worker code.
+ALLOWED_ORIGIN = "https://your-deployed-domain.com"
+
+[env.preview]
+vars = { ALLOWED_ORIGIN = "http://localhost:5173" }
