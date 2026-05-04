@@ -13,6 +13,7 @@ out/
 .env
 .env.local
 .env.*.local
+worker/.dev.vars
 
 # Logs
 npm-debug.log*
