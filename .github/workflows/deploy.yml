@@ -40,8 +40,6 @@ jobs:
           # Tells vite.config.ts to set base: '/CompanySearch/'
           GITHUB_PAGES: true
 
-      - uses: actions/configure-pages@v4
-
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
