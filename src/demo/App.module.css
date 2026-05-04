@@ -77,6 +77,24 @@
   letter-spacing: -0.02em;
 }
 
+.headerLinks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.demoBadge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7c3aed;
+  background: #f3f0ff;
+  border: 1px solid #ddd6fe;
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+
 .githubLink {
   display: flex;
   align-items: center;
@@ -141,8 +159,42 @@
   font-size: 17px;
   color: #64748b;
   max-width: 520px;
-  margin: 0 auto;
+  margin: 0 auto 24px;
   line-height: 1.75;
+}
+
+/* ─── Suggestion chips ────────────────────────────────────────────────────── */
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.suggestionsLabel {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.suggestionChip {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4f46e5;
+  background: #eef2ff;
+  border: 1.5px solid #c7d2fe;
+  border-radius: 20px;
+  padding: 4px 14px;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.suggestionChip:hover {
+  background: #e0e7ff;
+  border-color: #a5b4fc;
+  transform: translateY(-1px);
 }
 
 /* ─── Layout ──────────────────────────────────────────────────────────────── */

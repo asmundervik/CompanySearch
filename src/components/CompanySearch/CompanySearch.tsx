@@ -198,6 +198,7 @@ export function CompanySearch({
   placeholder = 'Search for a company…',
   googlePlacesApiKey,
   enrichApiUrl,
+  onEnrich,
   enrichConfig,
   theme = 'auto',
 }: CompanySearchProps) {
@@ -249,16 +250,30 @@ export function CompanySearch({
   const triggerEnrich = useCallback(
     async (name: string, source: 'google' | 'manual', homepageUrl?: string) => {
       setPhase({ kind: 'enriching', name, source, homepageUrl })
-      const result = await enrich(name, homepageUrl, enrichConfig)
-      if ('error' in result) {
-        setPhase({ kind: 'error', name, source, homepageUrl, message: result.error })
+
+      let enrichResult: { enriched: Record<string, string | number | null> } | { error: string }
+
+      if (onEnrich) {
+        // Local function provided (mock / test / Storybook) — no network call
+        try {
+          const enriched = await onEnrich(name)
+          enrichResult = { enriched }
+        } catch (err) {
+          enrichResult = { error: err instanceof Error ? err.message : 'Enrichment failed' }
+        }
       } else {
-        const companyResult: CompanyResult = { name, homepageUrl, source, enriched: result.enriched }
+        enrichResult = await enrich(name, homepageUrl, enrichConfig)
+      }
+
+      if ('error' in enrichResult) {
+        setPhase({ kind: 'error', name, source, homepageUrl, message: enrichResult.error })
+      } else {
+        const companyResult: CompanyResult = { name, homepageUrl, source, enriched: enrichResult.enriched }
         setPhase({ kind: 'done', result: companyResult })
         onSelect(companyResult)
       }
     },
-    [enrich, enrichConfig, onSelect]
+    [enrich, enrichConfig, onEnrich, onSelect]
   )
 
   const confirmName = useCallback(
@@ -268,13 +283,15 @@ export function CompanySearch({
       setInputValue(trimmed)
       setDropdownOpen(false)
       setActiveIndex(-1)
-      if (source === 'google') {
-        triggerEnrich(trimmed, 'google')
+      // Skip the homepage step when using a local onEnrich function —
+      // there is no server-side scraper to pass a URL to.
+      if (source === 'google' || onEnrich) {
+        triggerEnrich(trimmed, source)
       } else {
         setPhase({ kind: 'homepage', name: trimmed })
       }
     },
-    [triggerEnrich]
+    [onEnrich, triggerEnrich]
   )
 
   const reset = useCallback(() => {
